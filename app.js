@@ -12,7 +12,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const writeFileAsync = util.promisify(fs.writeFile);
+
 
 var teamList = [];
 const managerQuestions = [
@@ -41,7 +41,7 @@ const managerQuestions = [
     {
         type: "input",
         name: "officeNum",
-        message: "Enter office number:",
+        message: "Enter office room number:",
         validate: async (input) => {
             if (isNaN(input)) {
                 return "Please enter a number";
@@ -123,7 +123,7 @@ const employeeQuestions = [
 ]
 
 function buildTeamList() {
-    inquire.prompt(employeeQuestions).then(employeeInfo => {
+    inquirer.prompt(employeeQuestions).then(employeeInfo => {
         if (employeeInfo.role == "engineer") {
             var newMember = new Engineer(employeeInfo.name, teamList.length + 1, employeeInfo.email, employeeInfo.github);
         } else {
@@ -140,28 +140,16 @@ function buildTeamList() {
 }
 
 function buildHtmlPage() {
-    let newFile = fs.readFileSync("./templates/main.html")
-    fs.writeFileSync("./output/team.html", newFile, function (err) {
-        if (err) throw err;
-    })
-
-    console.log("Base page generated!");
-
-    for (member of teamList) {
-        if (member.getRole() == "Manager") {
-            buildHtmlCard("manager", member.getName(), member.getId(), member.getEmail(), "Office: " + member.getOfficeNumber());
-        } else if (member.getRole() == "Engineer") {
-            buildHtmlCard("engineer", member.getName(), member.getId(), member.getEmail(), "Github: " + member.getGithub());
-        } else if (member.getRole() == "Intern") {
-            buildHtmlCard("intern", member.getName(), member.getId(), member.getEmail(), "School: " + member.getSchool());
-        }
-    }
-    fs.appendFileSync("./output/team.html", "</div></main></body></html>", function (err) {
-        if (err) throw err;
-    });
-    console.log("Page tags closed! Operation completed.")
-
+   // Create the output directory if the output path doesn't exist
+   if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR)
+  }
+  fs.writeFileSync(outputPath, render(teamList), "utf-8");
+  console.log("Get Ready To Roll.")
 }
+
+
+
 
 function buildHtmlCard(memberType, name, id, email, propertyValue) {
     let data = fs.readFileSync(`./templates/${memberType}.html`, 'utf8')
@@ -174,7 +162,7 @@ function buildHtmlCard(memberType, name, id, email, propertyValue) {
 }
 
 function init() {
-    inquire.prompt(managerQuestions).then(managerInfo => {
+    inquirer.prompt(managerQuestions).then(managerInfo => {
         let teamManager = new Manager(managerInfo.name, 1, managerInfo.email, managerInfo.officeNum);
         teamList.push(teamManager);
         console.log(" ");
