@@ -19,7 +19,7 @@ const managerQuestions = [
     {
         type: "input",
         name: "name",
-        message: "Enter manager name:",
+        message: "Enter manager first or last name:",
         validate: async (input) => {
             if (input == "" || /\s/.test(input)) {
                 return "Please enter first or last name.";
