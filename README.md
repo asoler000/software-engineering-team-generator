@@ -23,7 +23,7 @@ How do you deliver this? Here are some guidelines:
 
 * Below is an example of what the application looks like. 
 
-![Employee Summary 1](./Assets/software-engineering-team-gen.gif)
+![Employee Summary 1](./Assets/team-software.gif)
 
 
 In the `Develop` folder, there is a `package.json`, so make sure to `npm install`.
